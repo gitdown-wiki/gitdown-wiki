@@ -6,3 +6,9 @@ parameters:
 services:
     markdown:
         class: AppBundle\Service\MarkdownService
+    app.twig_extension:
+        class: AppBundle\Twig\AppExtension
+        arguments: ['@markdown']
+        public: false
+        tags:
+            - { name: twig.extension }
