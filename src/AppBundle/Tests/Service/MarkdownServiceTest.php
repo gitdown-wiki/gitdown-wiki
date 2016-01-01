@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\AppBundle\Twig;
+namespace AppBundle\Tests\Service;
 
 use \AppBundle\Service\MarkdownService;
 
