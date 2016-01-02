@@ -18,7 +18,7 @@ class RepositoryServiceTest extends \PHPUnit_Framework_TestCase
         $fs->remove(realpath(__DIR__ . '/../../../../' . $rootPath . '/' . $repoName));
     }
     
-    public function testRepositoryCreation()
+    public function testRepositoryGetter()
     {
         $repoName = 'test';
         $rootPath = 'app/data';
@@ -47,5 +47,52 @@ class RepositoryServiceTest extends \PHPUnit_Framework_TestCase
         
         $repoService = new RepositoryService($rootPath);
         $testRepo = $repoService->getRepository($repoName);
+    }
+    
+    public function testWithoutValidRepo()
+    {
+        $repoName = 'test';
+        $rootPath = 'app/data';
+        
+        $repoPath = __DIR__ . '/../../../../' . $rootPath . '/' . $repoName;
+        
+        $fs = new Filesystem();
+        $fs->mkdir($repoPath);
+        
+        $this->setExpectedException('\InvalidArgumentException');
+        
+        $repoService = new RepositoryService($rootPath);
+        $testRepo = $repoService->getRepository($repoName);
+    }
+    
+    public function testRepositoryCreation()
+    {
+        $repoName = 'test';
+        $rootPath = 'app/data';
+        
+        $repoPath = __DIR__ . '/../../../../' . $rootPath . '/' . $repoName;
+        
+        $repoService = new RepositoryService($rootPath);
+        $testRepo = $repoService->createRepository($repoName);
+        
+        $this->assertInstanceOf('\Gitonomy\Git\Repository', $testRepo);
+    }
+    
+    public function testCreateExistingRepository()
+    {
+        $repoName = 'test';
+        $rootPath = 'app/data';
+        
+        $repoPath = __DIR__ . '/../../../../' . $rootPath . '/' . $repoName;
+        
+        $fs = new Filesystem();
+        $fs->mkdir($repoPath);
+        
+        $repo = \Gitonomy\Git\Admin::init($repoPath, false);
+        
+        $this->setExpectedException('\InvalidArgumentException');
+        
+        $repoService = new RepositoryService($rootPath);
+        $testRepo = $repoService->createRepository($repoName);
     }
 }
