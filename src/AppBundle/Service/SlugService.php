@@ -19,9 +19,6 @@ class SlugService
         // trim
         $text = trim($text, $this->slugChar);
 
-        // transliterate
-        $text = iconv('utf-8', 'us-ascii//TRANSLIT', $text);
-
         // lowercase
         $text = strtolower($text);
 
