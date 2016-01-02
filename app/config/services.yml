@@ -6,6 +6,9 @@ parameters:
 services:
     markdown:
         class: AppBundle\Service\MarkdownService
+    slug:
+        class: AppBundle\Service\SlugService
+        arguments: [%app.slug.character%]
     app.repository:
         class: AppBundle\Service\RepositoryService
         arguments: ['%app.wiki.root%']
