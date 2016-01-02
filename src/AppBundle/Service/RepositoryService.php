@@ -16,7 +16,9 @@ class RepositoryService
     public function getRepository($repositoryPath)
     {
         $path = realpath(__DIR__ . '../../../' . $this->rootPath . '/' . $repositoryPath);
-        $repository = new Repository($path);
+        $repository = new Repository($path, array(
+            'debug' => false
+        ));
         
         return $repository;
     }
