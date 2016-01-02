@@ -1,0 +1,11 @@
+{
+  "name": "gitdown-wiki",
+  "version": "1.0.0",
+  "description": "A Wiki based on git",
+  "main": "index.js",
+  "scripts": {
+    "test": "cd app && ../vendor/phpunit/phpunit/phpunit"
+  },
+  "author": "Marius Büscher <marius.buescher@gmx.de>",
+  "license": "MIT"
+}
