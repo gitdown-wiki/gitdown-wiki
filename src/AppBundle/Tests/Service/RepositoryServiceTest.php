@@ -35,4 +35,17 @@ class RepositoryServiceTest extends \PHPUnit_Framework_TestCase
         
         $this->assertInstanceOf('\Gitonomy\Git\Repository', $testRepo);
     }
+    
+    public function testRepositoryWithoutFolder()
+    {
+        $repoName = 'test';
+        $rootPath = 'app/data';
+        
+        $repoPath = __DIR__ . '/../../../../' . $rootPath . '/' . $repoName;
+        
+        $this->setExpectedException('\InvalidArgumentException');
+        
+        $repoService = new RepositoryService($rootPath);
+        $testRepo = $repoService->getRepository($repoName);
+    }
 }
