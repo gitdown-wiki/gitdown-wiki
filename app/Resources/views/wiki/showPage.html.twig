@@ -11,6 +11,8 @@
             <div class="">
                 {{ content | markdown }}
             </div>
+            
+            <a href="{{ url('wiki_editpage', {'slug': wiki.slug, 'page': path}) }}">Edit Page</a>
         </div>
     </div>
 {% endblock %}
