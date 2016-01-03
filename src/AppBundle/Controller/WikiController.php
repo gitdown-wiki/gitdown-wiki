@@ -52,7 +52,7 @@ class WikiController extends Controller
         $fs->dumpFile($path . '/index.md', '# ' . $name);
         
         $repository->run('add', array('-A'));
-        $repository->run('commit', array('-m "Initial commit"', '--author="Gitdown wiki <wiki@example.com>"'));
+        $repository->run('commit', array('-m Initial commit', '--author="Gitdown wiki <wiki@example.com>"'));
         
         return $this->redirectToRoute('wiki_showpage', array('slug' => $slug));
     }
