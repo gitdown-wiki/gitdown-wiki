@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% from 'wiki/partials/menu.html.twig' import menu as menu %}
+{% from 'page/partials/menu.html.twig' import menu as menu %}
 
 {% block body %}
     <div id="wrapper">
@@ -12,7 +12,7 @@
                 {{ content | markdown }}
             </div>
             
-            <a href="{{ url('wiki_editpage', {'slug': wiki.slug, 'page': path}) }}">Edit Page</a>
+            <a href="{{ url('page_edit', {'slug': wiki.slug, 'page': path}) }}">Edit Page</a>
         </div>
     </div>
 {% endblock %}

@@ -54,7 +54,7 @@ class WikiController extends Controller
         $repository->run('add', array('-A'));
         $repository->run('commit', array('-m Initial commit', '--author="Gitdown wiki <wiki@example.com>"'));
         
-        return $this->redirectToRoute('wiki_showpage', array('slug' => $slug));
+        return $this->redirectToRoute('page_show', array('slug' => $slug));
     }
     
     /**
@@ -69,94 +69,6 @@ class WikiController extends Controller
         
         return $this->render('wiki/index.html.twig', array(
             'wikis' => $wikis
-        ));
-    }
-    
-    /**
-     * @Route("/wiki/{slug}/edit/{page}", name="wiki_editpage", requirements={
-     *     "page": "[\d\w-_\/\.+@*]+"
-     * }, defaults={
-     *     "page": "index"
-     * }))
-     * @Method("GET")
-     */
-    public function editPageAction($slug, $page)
-    {
-        $wikiRepository = $this->getDoctrine()->getRepository('AppBundle:Wiki');
-        $wiki = $wikiRepository->findOneBySlug($slug);
-        
-        $repository = $this->get('app.repository')->getRepository($slug);
-        $branch = $repository->getReferences()->getBranch('master');
-        $commit = $branch->getCommit();
-        $tree = $commit->getTree();
-        $blob = $tree->resolvePath($page . '.md');
-        
-        return $this->render('wiki/editPage.html.twig', array(
-            'wiki' => $wiki,
-            'tree' => $tree->getEntries(),
-            'content' => $blob->getContent(),
-            'path' => $page
-        ));
-    }
-    
-    /**
-     * @Route("/wiki/{slug}/edit/{page}", name="wiki_updatepage", requirements={
-     *     "page": "[\d\w-_\/\.+@*]+"
-     * }, defaults={
-     *     "page": "index"
-     * }))
-     * @Method("POST")
-     */
-    public function updatePageAction($slug, $page, Request $request)
-    {
-        $wikiRepository = $this->getDoctrine()->getRepository('AppBundle:Wiki');
-        $wiki = $wikiRepository->findOneBySlug($slug);
-        
-        $repository = $this->get('app.repository')->getRepository($slug);
-        
-        $path = $repository->getWorkingDir();
-        
-        $content = $request->request->get('content');
-        
-        $message = $request->request->get('message');
-        
-        if (strlen($message) === 0) {
-            $message = 'Update page ' . $page . '.md';
-        }
-        
-        $fs = new Filesystem();
-        $fs->dumpFile($path . '/' . $page . '.md', $content);
-        
-        $repository->run('add', array('-A'));
-        $repository->run('commit', array('-m ' . $message, '--author="Gitdown wiki <wiki@example.com>"'));
-        
-        return $this->redirectToRoute('wiki_showpage', array('slug' => $slug, 'page' => $page));
-    }
-    
-    /**
-     * @Route("/wiki/{slug}/{page}", name="wiki_showpage", requirements={
-     *     "page": "[\d\w-_\/\.+@*]+"
-     * }, defaults={
-     *     "page": "index"
-     * }))
-     * @Method("GET")
-     */
-    public function showPageAction($slug, $page)
-    {
-        $wikiRepository = $this->getDoctrine()->getRepository('AppBundle:Wiki');
-        $wiki = $wikiRepository->findOneBySlug($slug);
-        
-        $repository = $this->get('app.repository')->getRepository($slug);
-        $branch = $repository->getReferences()->getBranch('master');
-        $commit = $branch->getCommit();
-        $tree = $commit->getTree();
-        $blob = $tree->resolvePath($page . '.md');
-        
-        return $this->render('wiki/showPage.html.twig', array(
-            'wiki' => $wiki,
-            'tree' => $tree->getEntries(),
-            'content' => $blob->getContent(),
-            'path' => $page
         ));
     }
 }

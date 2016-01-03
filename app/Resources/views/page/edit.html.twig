@@ -1,11 +1,11 @@
 {% extends 'base.html.twig' %}
 
-{% from 'wiki/partials/menu.html.twig' import menu as menu %}
+{% from 'page/partials/menu.html.twig' import menu as menu %}
 
 {% block body %}
     <div id="wrapper">
         <div id="container">
-            <form class="" action="{{ url('wiki_updatepage', {'slug': wiki.slug, 'page': path}) }}" method="post">
+            <form class="" action="{{ url('page_update', {'slug': wiki.slug, 'page': path}) }}" method="post">
                 <label for="wiki-content">Content</label>
                 <textarea name="content" id="wiki-content" rows="8" cols="40">{{ content }}</textarea>
                 
