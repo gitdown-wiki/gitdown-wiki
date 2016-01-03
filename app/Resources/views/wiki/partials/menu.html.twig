@@ -1,0 +1,21 @@
+{% macro menu(tree, slug, basePath = '') %}
+{% from _self import entry as entry %}
+<ul>
+    {% for name, object in tree %}
+    {{ entry(name, object, slug, basePath) }}
+    {% endfor %}
+</ul>
+{% endmacro %}
+
+{% macro entry(name, object, slug, basePath = '') %}
+{% from _self import menu as menu %}
+<li>
+    {% if object[1] | isTree %}
+    {{ name }}
+    {% set path = basePath | extendPagePath(name) %}
+    {{ menu(object[1].getEntries(), slug, path) }}
+    {% else %}
+    <a href="{{ url('wiki_showpage', {'slug': slug, 'page': name | pageFromMarkdown(basePath) }) }}">{{ name }}</a>
+    {% endif %}
+</li>
+{% endmacro %}

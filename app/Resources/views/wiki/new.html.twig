@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div id="wrapper">
+        <div id="container">
+            <form class="" action="{{ url('wiki_create') }}" method="post">
+                <label for="wiki_name">Name:</label>
+                <input type="text" name="name" value="" placeholder="Name" id="wiki_name">
+                
+                <label for="wiki_slug">Slug:</label>
+                <input type="text" name="slug" value="" placeholder="Slug" id="wiki_slug">
+                
+                <button type="submit" name="create">Create</button>
+            </form>
+        </div>
+    </div>
+{% endblock %}
