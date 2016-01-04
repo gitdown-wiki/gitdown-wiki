@@ -12,7 +12,7 @@ use AppBundle\Entity\Wiki;
 class WikiController extends Controller
 {
     /**
-     * @Route("/wiki/new", name="wiki_new")
+     * @Route("/new", name="wiki_new")
      * @Method("GET")
      */
     public function newAction()
@@ -21,7 +21,7 @@ class WikiController extends Controller
     }
     
     /**
-     * @Route("/wiki/new", name="wiki_create")
+     * @Route("/new", name="wiki_create")
      * @Method("POST")
      */
     public function createAction(Request $request)
@@ -58,7 +58,7 @@ class WikiController extends Controller
     }
     
     /**
-     * @Route("/wiki", name="wiki_index")
+     * @Route("/", name="wiki_index")
      * @Method("GET")
      */
     public function indexAction()

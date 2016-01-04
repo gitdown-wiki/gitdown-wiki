@@ -12,7 +12,7 @@ use AppBundle\Entity\Wiki;
 class PageController extends Controller
 {
     /**
-     * @Route("/wiki/{slug}/edit/{page}", name="page_edit", requirements={
+     * @Route("/{slug}/edit/{page}", name="page_edit", requirements={
      *     "page": "[\d\w-_\/\.+@*]+"
      * }, defaults={
      *     "page": "index"
@@ -39,7 +39,7 @@ class PageController extends Controller
     }
     
     /**
-     * @Route("/wiki/{slug}/edit/{page}", name="page_update", requirements={
+     * @Route("/{slug}/edit/{page}", name="page_update", requirements={
      *     "page": "[\d\w-_\/\.+@*]+"
      * }, defaults={
      *     "page": "index"
@@ -73,7 +73,7 @@ class PageController extends Controller
     }
     
     /**
-     * @Route("/wiki/{slug}/new/{path}", name="page_new", requirements={
+     * @Route("/{slug}/new/{path}", name="page_new", requirements={
      *     "path": "[\d\w-_\/\.+@*]+"
      * }))
      * @Method("GET")
@@ -90,7 +90,7 @@ class PageController extends Controller
     }
     
     /**
-     * @Route("/wiki/{slug}/new/{path}", name="page_create", requirements={
+     * @Route("/{slug}/new/{path}", name="page_create", requirements={
      *     "path": "[\d\w-_\/\.+@*]+"
      * }))
      * @Method("POST")
@@ -132,7 +132,7 @@ class PageController extends Controller
     }
     
     /**
-     * @Route("/wiki/{slug}/delete/{page}", name="page_delete", requirements={
+     * @Route("/{slug}/delete/{page}", name="page_delete", requirements={
      *     "page": "[\d\w-_\/\.+@*]+"
      * }, defaults={
      *     "page": "index"
@@ -159,7 +159,7 @@ class PageController extends Controller
     }
     
     /**
-     * @Route("/wiki/{slug}/{page}", name="page_show", requirements={
+     * @Route("/{slug}/{page}", name="page_show", requirements={
      *     "page": "[\d\w-_\/\.+@*]+"
      * }, defaults={
      *     "page": "index"
