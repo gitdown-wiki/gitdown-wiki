@@ -4,6 +4,7 @@
     {% for name, object in tree %}
     {{ entry(name, object, slug, basePath) }}
     {% endfor %}
+    <li><a href="{{ url('page_new', {'slug': slug, 'path': basePath}) }}">New page</a></li>
 </ul>
 {% endmacro %}
 
