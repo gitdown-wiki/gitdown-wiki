@@ -73,6 +73,65 @@ class PageController extends Controller
     }
     
     /**
+     * @Route("/wiki/{slug}/new/{path}", name="page_new", requirements={
+     *     "path": "[\d\w-_\/\.+@*]+"
+     * }))
+     * @Method("GET")
+     */
+    public function newAction($slug, $path = '')
+    {
+        $wikiRepository = $this->getDoctrine()->getRepository('AppBundle:Wiki');
+        $wiki = $wikiRepository->findOneBySlug($slug);
+        
+        return $this->render('page/new.html.twig', array(
+            'wiki' => $wiki,
+            'path' => $path
+        ));
+    }
+    
+    /**
+     * @Route("/wiki/{slug}/new/{path}", name="page_create", requirements={
+     *     "path": "[\d\w-_\/\.+@*]+"
+     * }))
+     * @Method("POST")
+     */
+    public function createAction($slug, $path = '', Request $request)
+    {
+        $wikiRepository = $this->getDoctrine()->getRepository('AppBundle:Wiki');
+        $wiki = $wikiRepository->findOneBySlug($slug);
+        
+        $repository = $this->get('app.repository')->getRepository($slug);
+        
+        $pageName = $request->request->get('page');
+        
+        $page = $path;
+        $page .= (strlen($page) === 0) ? '' : '/';
+        $page .= $pageName;
+        
+        $repoPath = $repository->getWorkingDir();
+        
+        $fs = new Filesystem();
+        if ($fs->exists($repoPath . '/' . $page . '.md')) {
+            throw new \InvalidArgumentException(sprintf('File %s.md already exists', $page));
+        }
+        
+        $content = $request->request->get('content');
+        
+        $message = $request->request->get('message');
+        
+        if (strlen($message) === 0) {
+            $message = 'Create page ' . $page . '.md';
+        }
+        
+        $fs->dumpFile($repoPath . '/' . $page . '.md', $content);
+        
+        $repository->run('add', array('-A'));
+        $repository->run('commit', array('-m ' . $message, '--author="Gitdown wiki <wiki@example.com>"'));
+        
+        return $this->redirectToRoute('page_show', array('slug' => $slug, 'page' => $page ));
+    }
+    
+    /**
      * @Route("/wiki/{slug}/{page}", name="page_show", requirements={
      *     "page": "[\d\w-_\/\.+@*]+"
      * }, defaults={

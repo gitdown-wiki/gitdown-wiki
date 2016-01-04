@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% from 'page/partials/menu.html.twig' import menu as menu %}
+
+{% block body %}
+    <div id="wrapper">
+        <div id="container">
+            <form class="" action="{{ url('page_create', {'slug': wiki.slug, 'path': path}) }}" method="post">
+                <label for="wiki-page">Page</label>
+                <input type="text" name="page" value="" placeholder="Page" id="wiki-page">
+                
+                <label for="wiki-content">Content</label>
+                <textarea name="content" id="wiki-content" rows="8" cols="40" placeholder="Content"></textarea>
+                
+                <label for="wiki-message">Message</label>
+                <input type="text" name="message" value="" placeholder="Message" id="wiki-message">
+                
+                <button type="submit" name="submit">Save</button>
+            </form>
+        </div>
+    </div>
+{% endblock %}
