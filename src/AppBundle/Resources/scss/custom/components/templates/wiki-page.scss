@@ -24,4 +24,10 @@
     &__content-container {
         @include span(last 8);
     }
+    
+    &__action-link {
+        color: #000;
+        font-weight: bold;
+        text-decoration: none;
+    }
 }
