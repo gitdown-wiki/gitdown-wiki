@@ -1,0 +1,41 @@
+.form {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    
+    &__label {
+        display: block;
+        width: 100%;
+    }
+    
+    &__input {
+        display: block;
+        margin-bottom: 20px;
+        width: 100%;
+    }
+    
+    &__label--inline {
+        display: inline-block;
+        width: auto;
+    }
+    
+    &__input--inline {
+        display: inline-block;
+        width: auto;
+    }
+    
+    &__fieldset {
+        position: relative;
+        border: 0 none;
+        padding: 0;
+        margin: 0;
+    }
+    
+    &__fieldset--editor {
+        flex-grow: 1;
+    }
+    
+    &__submit {
+        display: block;
+    }
+}

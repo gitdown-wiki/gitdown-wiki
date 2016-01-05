@@ -5,15 +5,25 @@
 {% block body %}
     <div id="wrapper">
         <div id="container">
-            <form class="" action="{{ url('page_update', {'slug': wiki.slug, 'page': path}) }}" method="post">
-                <label for="wiki-content">Content</label>
-                <textarea name="content" id="wiki-content" rows="8" cols="40">{{ content }}</textarea>
+            <form class="form wiki-form" action="{{ url('page_update', {'slug': wiki.slug, 'page': path}) }}" method="post">
+                <fieldset class="form__fieldset wiki-form__editor-container form__fieldset--editor">
+                    <input type="hidden" name="content" id="wiki-content" value="{{ content }}">
+                    <div class="form__input wiki-form__editor" id="wiki-editor">{{ content }}</div>
+                </fieldset>
                 
-                <label for="wiki-message">Message</label>
-                <input type="text" name="message" value="" placeholder="Message" id="wiki-message">
+                <fieldset class="form__fieldset">
+                    <label class="form__label form__label--inline" for="wiki-message">Message</label>
+                    <input class="form__input form__input--inline" type="text" name="message" value="" placeholder="Message" id="wiki-message">
+                </fieldset>
                 
-                <button type="submit" name="submit">Save</button>
+                <fieldset class="form__fieldset">
+                    <button class="form__submit" type="submit" name="submit">Save</button>
+                </fieldset>
             </form>
         </div>
     </div>
+{% endblock %}
+
+{% block javascripts %}
+<script data-main="{{ asset('bundles/app/js/custom/main-editor.js') }}" src="{{ asset('bundles/app/js/vendor/require.js') }}" type="text/javascript"></script>
 {% endblock %}
