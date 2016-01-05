@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "A Wiki based on git",
   "main": "index.js",
+  "repository": "https://github.com/mariusbuescher/gitdown-wiki.git",
   "scripts": {
     "test": "cd app && ../vendor/phpunit/phpunit/phpunit"
   },
