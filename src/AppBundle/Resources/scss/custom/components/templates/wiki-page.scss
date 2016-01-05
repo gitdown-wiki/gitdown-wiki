@@ -1,0 +1,11 @@
+.wiki-page {
+    @include container();
+
+    &__nav {
+        @include span(4);
+    }
+
+    &__content-container {
+        @include span(last 8);
+    }
+}

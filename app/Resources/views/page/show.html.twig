@@ -3,14 +3,14 @@
 {% from 'page/partials/menu.html.twig' import menu as menu %}
 
 {% block body %}
-    <div id="wrapper">
-        <div id="container">
+    <div id="wiki-page">
             
-            <nav class="wiki-nav">
-                {{ menu(tree, wiki.slug) }}
-            </nav>
-            
-            <article class="wiki-content">
+        <nav class="wiki-page__nav">
+            {{ menu(tree, wiki.slug) }}
+        </nav>
+        
+        <div class="wiki-page__content-container">
+            <article class="wiki-page__content">
                 {{ content | markdown }}
             </article>
             
