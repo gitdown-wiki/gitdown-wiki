@@ -58,6 +58,40 @@ class WikiController extends Controller
     }
     
     /**
+     * @Route("/edit/{slug}", name="wiki_edit")
+     * @Method("GET")
+     */
+    public function editAction($slug)
+    {
+        $wikiRepository = $this->getDoctrine()->getRepository('AppBundle:Wiki');
+        $wiki = $wikiRepository->findOneBySlug($slug);
+        
+        return $this->render('wiki/edit.html.twig', array(
+            'wiki' => $wiki
+        ));
+    }
+    
+    /**
+     * @Route("/edit/{slug}", name="wiki_update")
+     * @Method("POST")
+     */
+    public function updateAction($slug, Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+        
+        $wikiRepository = $this->getDoctrine()->getRepository('AppBundle:Wiki');
+        $wiki = $wikiRepository->findOneBySlug($slug);
+        
+        $newName = $request->request->get('name');
+        
+        $wiki->setName($newName);
+        
+        $em->flush();
+        
+        return $this->redirectToRoute('page_show', array('slug' => $wiki->getSlug()));
+    }
+    
+    /**
      * @Route("/", name="wiki_index")
      * @Method("GET")
      */
