@@ -1,18 +1,18 @@
-{% extends 'page.html.twig' %}
+{% extends 'base.html.twig' %}
 
 {% from 'page/partials/menu.html.twig' import menu as menu %}
-
-{% block wikiNav %}
-    {{ menu(tree, wiki.slug) }}
-{% endblock %}
 
 {% block body %}
     <div id="wrapper">
         <div id="container">
             
-            <div class="wiki-content">
+            <nav class="wiki-nav">
+                {{ menu(tree, wiki.slug) }}
+            </nav>
+            
+            <article class="wiki-content">
                 {{ content | markdown }}
-            </div>
+            </article>
             
             <a href="{{ url('page_edit', {'slug': wiki.slug, 'page': path}) }}" tabindex="0" title="Edit Page">Edit Page</a>
             <a href="{{ url('page_delete', {'slug': wiki.slug, 'page': path}) }}" tabindex="0" title="Delete Page">Delete Page</a>
