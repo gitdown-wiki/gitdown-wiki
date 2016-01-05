@@ -5,8 +5,12 @@
   "main": "index.js",
   "repository": "https://github.com/mariusbuescher/gitdown-wiki.git",
   "scripts": {
-    "test": "cd app && ../vendor/phpunit/phpunit/phpunit"
+    "test": "cd app && ../vendor/phpunit/phpunit/phpunit",
+    "stylesheets": "node-sass src/AppBundle/Resources/scss/custom/main.scss -o src/AppBundle/Resources/public/css"
   },
   "author": "Marius Büscher <marius.buescher@gmx.de>",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "node-sass": "^3.4.2"
+  }
 }

@@ -12,3 +12,6 @@
 /vendor/
 /bin/
 /composer.phar
+/src/AppBundle/Resources/public/css/*
+!/src/AppBundle/Resources/public/css/.gitkeep
+/node_modules/
