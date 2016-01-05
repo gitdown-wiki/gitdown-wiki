@@ -18,6 +18,10 @@
             color: $color-main-light;
             text-decoration: none;
             font-weight: bold;
+            
+            &:hover {
+                border-bottom: 1px solid $color-main-light;
+            }
         }
     }
 
@@ -29,5 +33,9 @@
         color: $color-font-main;
         font-weight: bold;
         text-decoration: none;
+        
+        &:hover {
+            border-bottom: 1px solid $color-font-main;
+        }
     }
 }
