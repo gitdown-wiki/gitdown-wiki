@@ -3,9 +3,10 @@
 {% from 'page/partials/menu.html.twig' import menu as menu %}
 
 {% block body %}
-    <div id="wiki-page">
+    <div class="wiki-page">
             
         <nav class="wiki-page__nav">
+            <h1>{{ wiki.name }}</h1>
             {{ menu(tree, wiki.slug) }}
         </nav>
         
