@@ -5,7 +5,7 @@
         <div id="container">
             <ul>
                 {% for wiki in wikis %}
-                <li><a href="{{ url('page_show', {'slug': wiki.slug}) }}">{{ wiki.name }}</a></li>
+                <li><a tabindex="0" href="{{ url('page_show', {'slug': wiki.slug}) }}" title="{{ wiki.name }}">{{ wiki.name }}</a></li>
                 
                 {% endfor %}
             </ul>
