@@ -1,12 +1,14 @@
-{% extends 'base.html.twig' %}
+{% extends 'page.html.twig' %}
 
 {% from 'page/partials/menu.html.twig' import menu as menu %}
+
+{% block wikiNav %}
+    {{ menu(tree, wiki.slug) }}
+{% endblock %}
 
 {% block body %}
     <div id="wrapper">
         <div id="container">
-            
-            {{ menu(tree, wiki.slug) }}
             
             <div class="wiki-content">
                 {{ content | markdown }}
