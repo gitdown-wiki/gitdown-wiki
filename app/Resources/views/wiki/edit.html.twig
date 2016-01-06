@@ -3,14 +3,20 @@
 {% block body %}
     <div id="wrapper">
         <div id="container">
-            <form class="" action="{{ url('wiki_update', {'slug': wiki.slug}) }}" method="post">
-                <label for="wiki_name">Name:</label>
-                <input type="text" name="name" value="{{ wiki.name }}" placeholder="Name" id="wiki_name">
+            <form class="form" action="{{ url('wiki_update', {'slug': wiki.slug}) }}" method="post">
+                <fieldset class="form__fieldset">
+                    <label class="form__label form__label--inline" for="wiki_name">Name:</label>
+                    <input class="form__input form__input--inline" type="text" name="name" value="{{ wiki.name }}" placeholder="Name" id="wiki_name">
+                </fieldset>
                 
-                <label for="wiki_slug">Slug:</label>
-                <input type="text" disabled name="slug" value="{{ wiki.slug }}" placeholder="Slug" id="wiki_slug">
+                <fieldset class="form__fieldset">
+                    <label class="form__label form__label--inline" for="wiki_slug">Slug:</label>
+                    <input class="form__input form__input--inline" type="text" disabled name="slug" value="{{ wiki.slug }}" placeholder="Slug" id="wiki_slug">
+                </fieldset>
                 
-                <button type="submit" name="update">Update</button>
+                <fieldset class="form__fieldset">
+                    <button class="form__submit" type="submit" name="update">Update</button>
+                </fieldset>
             </form>
         </div>
     </div>
