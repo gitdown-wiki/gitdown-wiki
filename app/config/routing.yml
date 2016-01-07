@@ -1,3 +1,6 @@
+security:
+    resource: "@AppBundle/Controller/SecurityController.php"
+    type:     annotation
 wiki:
     resource: "@AppBundle/Controller/WikiController.php"
     type:     annotation
