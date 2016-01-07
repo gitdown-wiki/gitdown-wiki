@@ -12,6 +12,9 @@ services:
     app.repository:
         class: AppBundle\Service\RepositoryService
         arguments: ['%app.wiki.root%']
+    app.menu:
+        class: AppBundle\Service\MenuService
+        arguments: [@doctrine.orm.entity_manager]
     app.twig_extension:
         class: AppBundle\Twig\AppExtension
         arguments: ['@markdown']
