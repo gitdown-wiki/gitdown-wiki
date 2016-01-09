@@ -1,7 +1,8 @@
+.vagrant/
 /web/bundles/
 /app/bootstrap.php.cache
 /app/cache/*
-/app/config/parameters.yml
+/etc/parameters.yml
 /app/logs/*
 /app/data/*
 !app/cache/.gitkeep
