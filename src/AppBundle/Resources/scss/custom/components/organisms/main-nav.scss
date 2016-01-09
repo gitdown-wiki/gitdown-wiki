@@ -4,11 +4,12 @@
     bottom: 0;
     left: 0;
     z-index: 5;
-    transform: translate(calc(-100% + 10px), 0);
+    transform: translate(calc(-100% + 12px), 0);
     transition: transform 0.25s;
     width: 25%;
     background-color: $color-main-light;
     padding: 10px;
+    border-right: 2px solid $color-main-dark;
     
     &:hover {
         transform: translate(0, 0);
