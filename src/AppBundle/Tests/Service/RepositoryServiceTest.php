@@ -11,19 +11,19 @@ class RepositoryServiceTest extends \PHPUnit_Framework_TestCase
     public function tearDown()
     {
         $repoName = 'test';
-        $rootPath = 'app/data';
+        $rootPath = realpath(__DIR__ . '/../../../../var/data');
         
         $fs = new Filesystem();
         
-        $fs->remove(realpath(__DIR__ . '/../../../../' . $rootPath . '/' . $repoName));
+        $fs->remove(realpath($rootPath . '/' . $repoName));
     }
     
     public function testRepositoryGetter()
     {
         $repoName = 'test';
-        $rootPath = 'app/data';
+        $rootPath = realpath(__DIR__ . '/../../../../var/data');
         
-        $repoPath = __DIR__ . '/../../../../' . $rootPath . '/' . $repoName;
+        $repoPath = $rootPath . '/' . $repoName;
         
         $fs = new Filesystem();
         $fs->mkdir($repoPath);
@@ -39,9 +39,9 @@ class RepositoryServiceTest extends \PHPUnit_Framework_TestCase
     public function testRepositoryWithoutFolder()
     {
         $repoName = 'test';
-        $rootPath = 'app/data';
+        $rootPath = realpath(__DIR__ . '/../../../../var/data');
         
-        $repoPath = __DIR__ . '/../../../../' . $rootPath . '/' . $repoName;
+        $repoPath = $rootPath . '/' . $repoName;
         
         $this->setExpectedException('\InvalidArgumentException');
         
@@ -52,9 +52,9 @@ class RepositoryServiceTest extends \PHPUnit_Framework_TestCase
     public function testWithoutValidRepo()
     {
         $repoName = 'test';
-        $rootPath = 'app/data';
+        $rootPath = realpath(__DIR__ . '/../../../../var/data');
         
-        $repoPath = __DIR__ . '/../../../../' . $rootPath . '/' . $repoName;
+        $repoPath = $rootPath . '/' . $repoName;
         
         $fs = new Filesystem();
         $fs->mkdir($repoPath);
@@ -68,9 +68,7 @@ class RepositoryServiceTest extends \PHPUnit_Framework_TestCase
     public function testRepositoryCreation()
     {
         $repoName = 'test';
-        $rootPath = 'app/data';
-        
-        $repoPath = __DIR__ . '/../../../../' . $rootPath . '/' . $repoName;
+        $rootPath = realpath(__DIR__ . '/../../../../var/data');
         
         $repoService = new RepositoryService($rootPath);
         $testRepo = $repoService->createRepository($repoName);
@@ -81,9 +79,9 @@ class RepositoryServiceTest extends \PHPUnit_Framework_TestCase
     public function testCreateExistingRepository()
     {
         $repoName = 'test';
-        $rootPath = 'app/data';
+        $rootPath = realpath(__DIR__ . '/../../../../var/data');
         
-        $repoPath = __DIR__ . '/../../../../' . $rootPath . '/' . $repoName;
+        $repoPath = $rootPath . '/' . $repoName;
         
         $fs = new Filesystem();
         $fs->mkdir($repoPath);

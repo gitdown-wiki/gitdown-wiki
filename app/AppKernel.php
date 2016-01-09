@@ -43,4 +43,19 @@ class AppKernel extends Kernel
     {
         return $this->getRootDir().'/../var/logs';
     }
+    
+    public function getDataDir()
+    {
+        return $this->getRootDir().'/../var/data';
+    }
+    
+    public function getKernelParameters()
+    {
+        return array_merge(
+            array(
+                'kernel.data_dir' => realpath($this->getDataDir()) ?: $this->getDataDir()
+            ),
+            parent::getKernelParameters()
+        );
+    }
 }

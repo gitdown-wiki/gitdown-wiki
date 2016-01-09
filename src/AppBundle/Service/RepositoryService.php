@@ -16,7 +16,7 @@ class RepositoryService
     
     public function getRepository($repositoryPath)
     {
-        $path = realpath(__DIR__ . '/../../../' . $this->rootPath . '/' . $repositoryPath);
+        $path = realpath($this->rootPath . '/' . $repositoryPath);
         
         if ($path === false) {
             throw new \InvalidArgumentException(sprintf('Repository "%s" does not exist.', $repositoryPath));
@@ -33,7 +33,7 @@ class RepositoryService
     
     public function createRepository($repositoryPath)
     {
-        $path = __DIR__ . '/../../../' . $this->rootPath . '/' . $repositoryPath;
+        $path = $this->rootPath . '/' . $repositoryPath;
         
         if (realpath($path) === false) {
             $fs = new Filesystem();

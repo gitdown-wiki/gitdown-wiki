@@ -18,5 +18,5 @@ parameters:
     # A secret key that's used to generate certain security-related tokens
     secret:            ThisTokenIsNotSoSecretChangeIt
     
-    app.wiki.root: var/data/wiki
+    app.wiki.root: %kernel.data_dir%/wiki
     app.slug.character: -
