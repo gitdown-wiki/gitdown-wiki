@@ -3,6 +3,7 @@
 namespace AppBundle\Twig;
 
 use AppBundle\Service\MarkdownService;
+use AppBundle\Service\SlugService;
 use Gitonomy\Git\Tree;
 
 class AppExtension extends \Twig_Extension
@@ -10,9 +11,12 @@ class AppExtension extends \Twig_Extension
     
     protected $parser;
     
-    function __construct(MarkdownService $parser)
+    protected $slugService;
+    
+    function __construct(MarkdownService $parser, SlugService $slugService)
     {
         $this->parser = $parser;
+        $this->slugService = $slugService;
     }
     
     public function getFilters()
@@ -34,6 +38,10 @@ class AppExtension extends \Twig_Extension
             new \Twig_SimpleFilter(
                 'extendPagePath',
                 array($this, 'extendPagePath')
+            ),
+            new \Twig_SimpleFilter(
+                'desluggify',
+                array($this, 'desluggify')
             )
         );
     }
@@ -48,7 +56,7 @@ class AppExtension extends \Twig_Extension
         return $object instanceof Tree;
     }
     
-    public function generatePageFromMarkdown($markdown, $basePath)
+    public function generatePageFromMarkdown($markdown, $basePath = '')
     {
         $path = (strlen($basePath) > 0) ? $basePath . '/' : '';
         return  $path . str_replace('.md', '', $markdown);
@@ -64,5 +72,10 @@ class AppExtension extends \Twig_Extension
     public function getName()
     {
         return 'app_extension';
+    }
+    
+    public function desluggify($content)
+    {
+        return $this->slugService->desluggify($content);
     }
 }

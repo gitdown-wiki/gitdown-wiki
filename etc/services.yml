@@ -17,7 +17,7 @@ services:
         arguments: [@app.repository]
     app.twig_extension:
         class: AppBundle\Twig\AppExtension
-        arguments: ['@markdown']
+        arguments: ['@markdown', '@slug']
         public: false
         tags:
             - { name: twig.extension }
