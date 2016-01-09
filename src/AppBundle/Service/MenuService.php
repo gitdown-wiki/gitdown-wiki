@@ -2,22 +2,18 @@
 
 namespace AppBundle\Service;
 
-use Doctrine\ORM\EntityManager;
-
 class MenuService
 {
-    protected $em;
+    protected $repositoryService;
     
-    function __construct(EntityManager $em)
+    function __construct(RepositoryService $repositoryService)
     {
-        $this->em = $em;
+        $this->repositoryService = $repositoryService;
     }
     
     public function getWikis()
     {
-        $repository = $this->em->getRepository('AppBundle:Wiki');;
-        
-        $wikis = $repository->findAll();
+        $wikis = $this->repositoryService->getAllRepositories();
         
         return $wikis;
     }

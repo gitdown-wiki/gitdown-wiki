@@ -4,6 +4,7 @@ namespace AppBundle\Service;
 
 use \Gitonomy\Git\Repository;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Finder\Finder;
 
 class RepositoryService
 {
@@ -29,6 +30,24 @@ class RepositoryService
         ));
         
         return $repository;
+    }
+    
+    public function getAllRepositories()
+    {
+        $finder = new Finder();
+        $finder->directories()->in($this->rootPath)->depth('== 0');
+        
+        $repositories = array();
+        
+        foreach ($finder as $directory) {
+            $repository = $this->getRepository($directory->getFileName());
+            array_push($repositories, array(
+                'slug' => $directory->getFileName(),
+                'name' => $repository->getDescription()
+            ));
+        }
+        
+        return $repositories;
     }
     
     public function createRepository($repositoryPath)

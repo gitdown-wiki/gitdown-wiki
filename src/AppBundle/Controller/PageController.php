@@ -21,10 +21,13 @@ class PageController extends Controller
      */
     public function editAction($slug, $page)
     {
-        $wikiRepository = $this->getDoctrine()->getRepository('AppBundle:Wiki');
-        $wiki = $wikiRepository->findOneBySlug($slug);
-        
         $repository = $this->get('app.repository')->getRepository($slug);
+        
+        $wiki = array(
+            'slug' => $slug,
+            'name' => $repository->getDescription()
+        );
+        
         $branch = $repository->getReferences()->getBranch('master');
         $commit = $branch->getCommit();
         $tree = $commit->getTree();
@@ -48,9 +51,6 @@ class PageController extends Controller
      */
     public function updateAction($slug, $page, Request $request)
     {
-        $wikiRepository = $this->getDoctrine()->getRepository('AppBundle:Wiki');
-        $wiki = $wikiRepository->findOneBySlug($slug);
-        
         $repository = $this->get('app.repository')->getRepository($slug);
         
         $path = $repository->getWorkingDir();
@@ -80,8 +80,12 @@ class PageController extends Controller
      */
     public function newAction($slug, $path = '')
     {
-        $wikiRepository = $this->getDoctrine()->getRepository('AppBundle:Wiki');
-        $wiki = $wikiRepository->findOneBySlug($slug);
+        $repository = $this->get('app.repository')->getRepository($slug);
+        
+        $wiki = array(
+            'slug' => $slug,
+            'name' => $repository->getDescription()
+        );
         
         return $this->render('page/new.html.twig', array(
             'wiki' => $wiki,
@@ -97,9 +101,6 @@ class PageController extends Controller
      */
     public function createAction($slug, $path = '', Request $request)
     {
-        $wikiRepository = $this->getDoctrine()->getRepository('AppBundle:Wiki');
-        $wiki = $wikiRepository->findOneBySlug($slug);
-        
         $repository = $this->get('app.repository')->getRepository($slug);
         
         $pageName = $request->request->get('page');
@@ -145,9 +146,6 @@ class PageController extends Controller
             throw new \InvalidArgumentException('Index.md can not be deleted.');
         }
         
-        $wikiRepository = $this->getDoctrine()->getRepository('AppBundle:Wiki');
-        $wiki = $wikiRepository->findOneBySlug($slug);
-        
         $repository = $this->get('app.repository')->getRepository($slug);
         
         $message = 'Delete page ' . $page . '.md';
@@ -168,10 +166,13 @@ class PageController extends Controller
      */
     public function showAction($slug, $page)
     {
-        $wikiRepository = $this->getDoctrine()->getRepository('AppBundle:Wiki');
-        $wiki = $wikiRepository->findOneBySlug($slug);
-        
         $repository = $this->get('app.repository')->getRepository($slug);
+        
+        $wiki = array(
+            'slug' => $slug,
+            'name' => $repository->getDescription()
+        );
+        
         $branch = $repository->getReferences()->getBranch('master');
         $commit = $branch->getCommit();
         $tree = $commit->getTree();

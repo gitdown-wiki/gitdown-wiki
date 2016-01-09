@@ -26,21 +26,13 @@ class WikiController extends Controller
      */
     public function createAction(Request $request)
     {
-        $wiki = new Wiki();
         
         $name = $request->request->get('name');
-        $wiki->setName($name);
-        
+
         $slug = $request->request->get('slug');
         if (empty($slug)) {
             $slug = $this->get('slug')->slugify($name);
         }
-        $wiki->setSlug($slug);
-        
-        $em = $this->getDoctrine()->getManager();
-        
-        $em->persist($wiki);
-        $em->flush();
         
         $repositoryService = $this->get('app.repository');
         
@@ -50,6 +42,8 @@ class WikiController extends Controller
         
         $fs = new Filesystem();
         $fs->dumpFile($path . '/index.md', '# ' . $name);
+        
+        $repository->setDescription($name);
         
         $repository->run('add', array('-A'));
         $repository->run('commit', array('-m Initial commit', '--author="Gitdown wiki <wiki@example.com>"'));
@@ -63,8 +57,12 @@ class WikiController extends Controller
      */
     public function editAction($slug)
     {
-        $wikiRepository = $this->getDoctrine()->getRepository('AppBundle:Wiki');
-        $wiki = $wikiRepository->findOneBySlug($slug);
+        $repository = $this->get('app.repository')->getRepository($slug);
+        
+        $wiki = array(
+            'slug' => $slug,
+            'name' => $repository->getDescription()
+        );
         
         return $this->render('wiki/edit.html.twig', array(
             'wiki' => $wiki
@@ -77,18 +75,13 @@ class WikiController extends Controller
      */
     public function updateAction($slug, Request $request)
     {
-        $em = $this->getDoctrine()->getManager();
-        
-        $wikiRepository = $this->getDoctrine()->getRepository('AppBundle:Wiki');
-        $wiki = $wikiRepository->findOneBySlug($slug);
+        $repository = $this->get('app.repository')->getRepository($slug);
         
         $newName = $request->request->get('name');
         
-        $wiki->setName($newName);
+        $repository->setDescription($newName);
         
-        $em->flush();
-        
-        return $this->redirectToRoute('page_show', array('slug' => $wiki->getSlug()));
+        return $this->redirectToRoute('page_show', array('slug' => $slug));
     }
     
     /**
@@ -97,9 +90,7 @@ class WikiController extends Controller
      */
     public function indexAction()
     {
-        $wikiRepository = $this->getDoctrine()->getRepository('AppBundle:Wiki');
-        
-        $wikis = $wikiRepository->findAll();
+        $wikis = $this->get('app.repository')->getAllRepositories();
         
         return $this->render('wiki/index.html.twig', array(
             'wikis' => $wikis
