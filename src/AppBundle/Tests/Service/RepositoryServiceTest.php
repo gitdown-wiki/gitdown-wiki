@@ -65,6 +65,49 @@ class RepositoryServiceTest extends \PHPUnit_Framework_TestCase
         $testRepo = $repoService->getRepository($repoName);
     }
     
+    public function testAllReposGetter()
+    {
+        $repoNames = array(
+            'test',
+            'test-2'
+        );
+        $rootPath = realpath(__DIR__ . '/../../../../var/data').'/test';
+        
+        $fs = new Filesystem();
+        
+        foreach ($repoNames as $repoName) {
+            $repoPath = $rootPath . '/' . $repoName;
+            $fs->mkdir($repoPath);
+            $repo = \Gitonomy\Git\Admin::init($repoPath, false);
+            $repo->setDescription($repoName);
+        }
+        
+        $repoService = new RepositoryService($rootPath);
+        $repos = $repoService->getAllRepositories();
+        
+        $this->assertCount(2, $repos);
+    }
+    
+    public function testRepoFromAllReposGetter()
+    {
+        $repoName = 'test';
+        $repoDescription = 'A test description';
+        $rootPath = realpath(__DIR__ . '/../../../../var/data').'/test';
+        
+        $fs = new Filesystem();
+        
+        $repoPath = $rootPath . '/' . $repoName;
+        $fs->mkdir($repoPath);
+        $repo = \Gitonomy\Git\Admin::init($repoPath, false);
+        $repo->setDescription($repoDescription);
+        
+        $repoService = new RepositoryService($rootPath);
+        $repos = $repoService->getAllRepositories();
+        
+        $this->assertEquals($repoName, $repos[0]['slug']);
+        $this->assertEquals($repoDescription, $repos[0]['name']);
+    }
+    
     public function testRepositoryCreation()
     {
         $repoName = 'test';
