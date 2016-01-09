@@ -31,4 +31,23 @@ class SlugService
         }
         return $text;
     }
+    
+    public function desluggify($slug)
+    {
+        $text = str_replace($this->slugChar, ' ', $slug);
+        
+        $wordsToProcess = explode(' ', $text);
+        $words = array();
+        
+        foreach($wordsToProcess as $word) {
+            $strArray = str_split($word);
+            $strArray[0] = strtoupper($strArray[0]);
+            $word = implode($strArray);
+            array_push($words, $word);
+        }
+        
+        $text = implode(' ', $words);
+        
+        return $text;
+    }
 }

@@ -32,4 +32,12 @@ class SlugServiceTest extends \PHPUnit_Framework_TestCase
         
         $slug = $slugService->slugify(' ');
     }
+    
+    public function testDesluggify()
+    {
+        $slugService = new SlugService();
+        $sentence = $slugService->desluggify('this-is-just-a-test');
+        
+        $this->assertEquals('This Is Just A Test', $sentence);
+    }
 }
