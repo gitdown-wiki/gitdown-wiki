@@ -24,4 +24,7 @@ on your console. The front end dependencies will be installed via `npm install`.
 
 You can compile all the stylesheets with `npm run stylesheets`. After that is done
 you can type `app/console assetic:install --symlink` to symlink the assets to the
-web folder. After that you are ready to develop.
+web folder. After that you are ready to develop
+
+To initialize the wiki type `app/console gitdown-wiki:init` to your console. All
+things you need to operate this software will be generated from the configurations.
