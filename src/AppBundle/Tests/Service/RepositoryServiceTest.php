@@ -108,6 +108,31 @@ class RepositoryServiceTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($repoDescription, $repos[0]['name']);
     }
     
+    public function testAllReposGetterWithAdminRepo()
+    {
+        $adminRepo = 'test-admin';
+        $repoNames = array(
+            'test',
+            'test-2',
+            $adminRepo
+        );
+        $rootPath = realpath(__DIR__ . '/../../../../var/data').'/test';
+        
+        $fs = new Filesystem();
+        
+        foreach ($repoNames as $repoName) {
+            $repoPath = $rootPath . '/' . $repoName;
+            $fs->mkdir($repoPath);
+            $repo = \Gitonomy\Git\Admin::init($repoPath, false);
+            $repo->setDescription($repoName);
+        }
+        
+        $repoService = new RepositoryService($rootPath, $adminRepo);
+        $repos = $repoService->getAllRepositories();
+        
+        $this->assertCount(2, $repos);
+    }
+    
     public function testRepositoryCreation()
     {
         $repoName = 'test';

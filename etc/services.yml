@@ -11,7 +11,7 @@ services:
         arguments: [%app.slug.character%]
     app.repository:
         class: AppBundle\Service\RepositoryService
-        arguments: ['%app.wiki.root%']
+        arguments: ['%app.wiki.root%', '%app.admin_repository%']
     app.menu:
         class: AppBundle\Service\MenuService
         arguments: [@app.repository]

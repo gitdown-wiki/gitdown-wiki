@@ -10,9 +10,12 @@ class RepositoryService
 {
     protected $rootPath;
     
-    function __construct($rootPath)
+    protected $adminRepository;
+    
+    function __construct($rootPath, $adminRepository = '')
     {
         $this->rootPath = $rootPath;
+        $this->adminRepository = $adminRepository;
     }
     
     public function getRepository($repositoryPath)
@@ -35,7 +38,10 @@ class RepositoryService
     public function getAllRepositories()
     {
         $finder = new Finder();
-        $finder->directories()->in($this->rootPath)->depth('== 0');
+        $finder->directories()
+            ->in($this->rootPath)
+            ->depth('== 0')
+            ->notName($this->adminRepository);
         
         $repositories = array();
         

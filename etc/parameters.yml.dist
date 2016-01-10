@@ -20,3 +20,4 @@ parameters:
     
     app.wiki.root: %kernel.data_dir%/wiki
     app.slug.character: -
+    app.admin_repository: gitdown-admin
