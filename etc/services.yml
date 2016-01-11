@@ -9,6 +9,9 @@ services:
     slug:
         class: AppBundle\Service\SlugService
         arguments: [%app.slug.character%]
+    app.git_user_provider:
+        class: AppBundle\Security\User\GitUserProvider
+        arguments: ['@app.repository', '%app.admin_repository%']
     app.repository:
         class: AppBundle\Service\RepositoryService
         arguments: ['%app.wiki.root%', '%app.admin_repository%']
