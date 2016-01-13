@@ -66,8 +66,16 @@ class PageController extends Controller
         $fs = new Filesystem();
         $fs->dumpFile($path . '/' . $page . '.md', $content);
         
+        $user = $this->getUser();
+        
+        $name = $user->getName();
+        $name = ($name) ? $name : 'Gitdown wiki';
+        
+        $email = $user->getEmail();
+        $email = ($email) ? $email : 'wiki@example.com';
+        
         $repository->run('add', array('-A'));
-        $repository->run('commit', array('-m ' . $message, '--author="Gitdown wiki <wiki@example.com>"'));
+        $repository->run('commit', array('-m ' . $message, '--author="'.$name.' <'.$email.'>"'));
         
         return $this->redirectToRoute('page_show', array('slug' => $slug, 'page' => $page));
     }
@@ -126,8 +134,16 @@ class PageController extends Controller
         
         $fs->dumpFile($repoPath . '/' . $page . '.md', $content);
         
+        $user = $this->getUser();
+        
+        $name = $user->getName();
+        $name = ($name) ? $name : 'Gitdown wiki';
+        
+        $email = $user->getEmail();
+        $email = ($email) ? $email : 'wiki@example.com';
+        
         $repository->run('add', array('-A'));
-        $repository->run('commit', array('-m ' . $message, '--author="Gitdown wiki <wiki@example.com>"'));
+        $repository->run('commit', array('-m ' . $message, '--author="'.$name.' <'.$email.'>"'));
         
         return $this->redirectToRoute('page_show', array('slug' => $slug, 'page' => $page ));
     }
@@ -150,8 +166,16 @@ class PageController extends Controller
         
         $message = 'Delete page ' . $page . '.md';
         
+        $user = $this->getUser();
+        
+        $name = $user->getName();
+        $name = ($name) ? $name : 'Gitdown wiki';
+        
+        $email = $user->getEmail();
+        $email = ($email) ? $email : 'wiki@example.com';
+        
         $repository->run('rm', array($page . '.md'));
-        $repository->run('commit', array('-m ' . $message, '--author="Gitdown wiki <wiki@example.com>"'));
+        $repository->run('commit', array('-m ' . $message, '--author="'.$name.' <'.$email.'>"'));
         
         return $this->redirectToRoute('page_show', array('slug' => $slug));
     }
