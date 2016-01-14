@@ -2,7 +2,7 @@
 /web/bundles/
 /app/bootstrap.php.cache
 /var/cache/*
-/etc/parameters.yml
+/app/config/parameters.yml
 /var/logs/*
 /var/data/*
 !var/cache/.gitkeep
