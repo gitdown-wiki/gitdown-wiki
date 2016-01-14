@@ -21,6 +21,8 @@ class PageController extends Controller
      */
     public function editAction($slug, $page)
     {
+        $this->denyAccessUnlessGranted('edit', $slug);
+        
         $repository = $this->get('app.repository')->getRepository($slug);
         
         $wiki = array(
@@ -51,6 +53,8 @@ class PageController extends Controller
      */
     public function updateAction($slug, $page, Request $request)
     {
+        $this->denyAccessUnlessGranted('edit', $slug);
+        
         $repository = $this->get('app.repository')->getRepository($slug);
         
         $path = $repository->getWorkingDir();
@@ -88,6 +92,8 @@ class PageController extends Controller
      */
     public function newAction($slug, $path = '')
     {
+        $this->denyAccessUnlessGranted('edit', $slug);
+        
         $repository = $this->get('app.repository')->getRepository($slug);
         
         $wiki = array(
@@ -109,6 +115,8 @@ class PageController extends Controller
      */
     public function createAction($slug, $path = '', Request $request)
     {
+        $this->denyAccessUnlessGranted('edit', $slug);
+        
         $repository = $this->get('app.repository')->getRepository($slug);
         
         $pageName = $request->request->get('page');
@@ -158,6 +166,8 @@ class PageController extends Controller
      */
     public function deleteAction($slug, $page)
     {
+        $this->denyAccessUnlessGranted('delete', $slug);
+        
         if ($page === 'index') {
             throw new \InvalidArgumentException('Index.md can not be deleted.');
         }
@@ -190,6 +200,8 @@ class PageController extends Controller
      */
     public function showAction($slug, $page)
     {
+        $this->denyAccessUnlessGranted('show', $slug);
+        
         $repository = $this->get('app.repository')->getRepository($slug);
         
         $wiki = array(

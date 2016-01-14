@@ -15,8 +15,10 @@
                 {{ content | markdown }}
             </article>
             
+            {% if is_granted('edit', wiki.slug) %}
             <a class="wiki-page__action-link" href="{{ url('page_edit', {'slug': wiki.slug, 'page': path}) }}" tabindex="0" title="Edit Page">Edit Page</a>
             <a class="wiki-page__action-link" href="{{ url('page_delete', {'slug': wiki.slug, 'page': path}) }}" tabindex="0" title="Delete Page">Delete Page</a>
+            {% endif %}
         </div>
     </div>
 {% endblock %}

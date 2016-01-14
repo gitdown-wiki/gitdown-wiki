@@ -57,6 +57,8 @@ class WikiController extends Controller
      */
     public function editAction($slug)
     {
+        $this->denyAccessUnlessGranted('edit', $slug);
+        
         $repository = $this->get('app.repository')->getRepository($slug);
         
         $wiki = array(
@@ -75,6 +77,8 @@ class WikiController extends Controller
      */
     public function updateAction($slug, Request $request)
     {
+        $this->denyAccessUnlessGranted('edit', $slug);
+        
         $repository = $this->get('app.repository')->getRepository($slug);
         
         $newName = $request->request->get('name');
