@@ -28,3 +28,7 @@ web folder. After that you are ready to develop
 
 To initialize the wiki type `app/console gitdown-wiki:init` to your console. All
 things you need to operate this software will be generated from the configurations.
+
+After that you will need a user. You can easily add one by using the console:
+`app/console gitdown-wiki:add-user`. Just follow the instructions and you will have
+an admin user created.
