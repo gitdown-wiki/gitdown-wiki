@@ -15,10 +15,12 @@ class WikiVoter extends Voter
     const DELETE = 'delete';
     
     protected $adminRepository;
+    protected $adminGroup;
     
-    function __construct(RepositoryService $repositoryService, $adminRepository)
+    function __construct(RepositoryService $repositoryService, $adminRepository, $adminGroup)
     {
         $this->adminRepository = $repositoryService->getRepository($adminRepository);
+        $this->adminGroup = $adminGroup;
         
         $this->yamlParser = new Parser();
     }
@@ -41,6 +43,10 @@ class WikiVoter extends Voter
         $lastCommit = $this->adminRepository->getReferences()->getBranch('master')->getCommit();
         $wiki = false;
         $user = $token->getUser();
+
+        if (in_array($this->adminGroup, $user->getRoles())) {
+            return true;
+        }
         
         try {
             $wikiDataString = $lastCommit->getTree()->resolvePath('wikis/' . $subject . '.yml');
@@ -77,6 +83,7 @@ class WikiVoter extends Voter
         while($role = array_pop($roles)) {
             if ($wiki['groups'][$role] === 'R') {
                 $hasAccess = true;
+                break;
             }
         }
         
@@ -95,6 +102,7 @@ class WikiVoter extends Voter
         while($role = array_pop($roles)) {
             if ($wiki['groups'][$role] === 'RW') {
                 $hasAccess = true;
+                break;
             }
         }
         
@@ -109,6 +117,7 @@ class WikiVoter extends Voter
         while($role = array_pop($roles)) {
             if ($wiki['groups'][$role] === 'RW+') {
                 $hasAccess = true;
+                break;
             }
         }
         

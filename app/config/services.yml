@@ -26,7 +26,7 @@ services:
             - { name: twig.extension }
     app.wiki_voter:
         class: AppBundle\Security\Authorization\Voter\WikiVoter
-        arguments: ['@app.repository', '%app.admin_repository%']
+        arguments: ['@app.repository', '%app.admin_repository%', '%app.admin_group%']
         tags:
             - { name: security.voter }
         public: false
