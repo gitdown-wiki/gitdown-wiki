@@ -78,13 +78,18 @@ class WikiVoter extends Voter
         }
         
         $roles = $user->getRoles();
+        $username = $user->getUsername();
         $hasAccess = false;
         
         while($role = array_pop($roles)) {
-            if ($wiki['groups'][$role] === 'R') {
+            if (!empty($wiki['groups']) && isset($wiki['groups'][$role]) && $wiki['groups'][$role] === 'R') {
                 $hasAccess = true;
                 break;
             }
+        }
+
+        if ($hasAccess === false && !empty($wiki['users']) && isset($wiki['users'][$username]) && $wiki['users'][$username] === 'R') {
+            $hasAccess = true;
         }
         
         return $hasAccess;
@@ -97,13 +102,18 @@ class WikiVoter extends Voter
         }
         
         $roles = $user->getRoles();
+        $username = $user->getUsername();
         $hasAccess = false;
         
         while($role = array_pop($roles)) {
-            if ($wiki['groups'][$role] === 'RW') {
+            if (!empty($wiki['groups']) && isset($wiki['groups'][$role]) && $wiki['groups'][$role]  === 'RW') {
                 $hasAccess = true;
                 break;
             }
+        }
+
+        if ($hasAccess === false && !empty($wiki['users']) && isset($wiki['users'][$username]) && $wiki['users'][$username] === 'RW') {
+            $hasAccess = true;
         }
         
         return $hasAccess;
@@ -112,15 +122,20 @@ class WikiVoter extends Voter
     private function canDelete($wiki, UserInterface $user)
     {
         $roles = $user->getRoles();
+        $username = $user->getUsername();
         $hasAccess = false;
         
         while($role = array_pop($roles)) {
-            if ($wiki['groups'][$role] === 'RW+') {
+            if (!empty($wiki['groups']) && isset($wiki['groups'][$role]) && $wiki['groups'][$role] === 'RW+') {
                 $hasAccess = true;
                 break;
             }
         }
         
+        if ($hasAccess === false && !empty($wiki['users']) && isset($wiki['users'][$username]) && $wiki['users'][$username] === 'RW+') {
+            $hasAccess = true;
+        }
+
         return $hasAccess;
     }
 }
