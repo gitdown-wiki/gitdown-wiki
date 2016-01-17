@@ -7,6 +7,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Yaml\Dumper;
 use AppBundle\Entity\Wiki;
 
 class WikiController extends Controller
@@ -37,6 +38,7 @@ class WikiController extends Controller
         $repositoryService = $this->get('app.repository');
         
         $repository = $repositoryService->createRepository($slug);
+        $adminRepository = $repositoryService->getRepository($this->getParameter('app.admin_repository'));
         
         $path = $repository->getWorkingDir();
         
@@ -47,6 +49,28 @@ class WikiController extends Controller
         
         $repository->run('add', array('-A'));
         $repository->run('commit', array('-m Initial commit', '--author="Gitdown wiki <wiki@example.com>"'));
+
+        $username = $this->getUser()->getUsername();
+
+        $adminPath = $adminRepository->getWorkingDir();
+
+        $yamlDumper = new Dumper();
+        $yamlString = $yamlDumper->dump(array(
+            'groups' => null,
+            'owners' => array(
+                $username
+            ),
+            'users' => array(
+                $username => 'RW+'
+            )
+        ), 3);
+
+        $fs->dumpFile($adminPath . '/wikis/' . $slug . '.yml', $yamlString);
+
+        $adminMessage = sprintf('Added wiki %s', $slug);
+
+        $adminRepository->run('add', array('-A'));
+        $adminRepository->run('commit', array('-m ' . $adminMessage, '--author="Gitdown wiki <wiki@example.com>"'));
         
         return $this->redirectToRoute('page_show', array('slug' => $slug));
     }
