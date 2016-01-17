@@ -12,6 +12,9 @@ services:
     app.git_user_provider:
         class: AppBundle\Security\User\GitUserProvider
         arguments: ['@app.repository', '%app.admin_repository%']
+    app.git_user_factory:
+        class: AppBundle\Security\User\GitUserFactory
+        arguments: ['@=container']
     app.repository:
         class: AppBundle\Service\RepositoryService
         arguments: ['%app.wiki.root%', '%app.admin_repository%']

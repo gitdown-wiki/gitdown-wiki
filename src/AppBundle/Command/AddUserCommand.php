@@ -139,15 +139,14 @@ class AddUserCommand extends ContainerAwareCommand
         
         $adminRepositoryName = $this->getContainer()->getParameter('app.admin_repository');
         $adminRepository = $this->getContainer()->get('app.repository')->getRepository($adminRepositoryName);
-        
-        $user = new GitUser($username, $password, '', $roles, $email, $name);
-        
-        $encoder = $this->getContainer()->get('security.password_encoder');
-        $encodedPassword = $encoder->encodePassword($user, $password);
-        
+
+        $user = $this->getContainer()
+            ->get('app.git_user_factory')
+            ->constructUser($username, $password, $roles, $name, $email);
+
         $userArray = array(
             'roles' => $user->getRoles(),
-            'password' => $encodedPassword,
+            'password' => $user->getPassword(),
             'salt' => $user->getSalt(),
             'email' => $user->getEmail(),
             'name' => $user->getName()
