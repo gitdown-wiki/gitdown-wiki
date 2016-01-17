@@ -15,7 +15,7 @@ use Symfony\Component\Yaml\Dumper;
 class AddUserCommand extends ContainerAwareCommand
 {
     const MAX_ATTEMPTS = 5;
-    
+
     protected function configure()
     {
         $this
@@ -50,17 +50,17 @@ class AddUserCommand extends ContainerAwareCommand
             )
         ;
     }
-    
+
     public function interact(InputInterface $input, OutputInterface $output)
     {
         if (null !== $input->getArgument('username') && null !== $input->getArgument('password') && null !== $input->getArgument('email') && null !== $input->getArgument('name')) {
             return;
         }
-        
+
         $output->writeln('');
         $output->writeln('Add User Command Interactive Wizard');
         $output->writeln('-----------------------------------');
-        
+
         $output->writeln(array(
             '',
             'If you prefer to not use this interactive wizard, provide the',
@@ -69,15 +69,15 @@ class AddUserCommand extends ContainerAwareCommand
             ' $ php app/console gitdown-wiki:add-user username password email@example.com',
             '',
         ));
-        
+
         $output->writeln(array(
             '',
             'Please insert the missing data',
             ''
         ));
-        
+
         $console = $this->getHelper('question');
-        
+
         if (null === $username = $input->getArgument('username')) {
             $question = new Question(' > <info>Username</>: ');
             $question->setValidator(function ($answer) {
@@ -94,7 +94,7 @@ class AddUserCommand extends ContainerAwareCommand
         } else {
             $output->writeln(' > <info>Username</>: '.$username);
         }
-        
+
         if (null === $password = $input->getArgument('password')) {
             $question = new Question(' > <info>Password</> (your type will be hidden): ');
             $question->setValidator(array($this, 'passwordValidator'));
@@ -118,7 +118,7 @@ class AddUserCommand extends ContainerAwareCommand
         } else {
             $output->writeln(' > <info>Email</>: '.$email);
         }
-        
+
         if (null === $name = $input->getArgument('name')) {
             $question = new Question(' > <info>Name</>: ');
 
@@ -136,7 +136,7 @@ class AddUserCommand extends ContainerAwareCommand
         $roles = $input->getOption('roles');
         $email = $input->getArgument('email');
         $name = $input->getArgument('name');
-        
+
         $adminRepositoryName = $this->getContainer()->getParameter('app.admin_repository');
         $adminRepository = $this->getContainer()->get('app.repository')->getRepository($adminRepositoryName);
 
@@ -151,22 +151,22 @@ class AddUserCommand extends ContainerAwareCommand
             'email' => $user->getEmail(),
             'name' => $user->getName()
         );
-        
+
         $yamlDumper = new Dumper();
         $yaml = $yamlDumper->dump($userArray, 2);
-        
+
         $fs = new Filesystem();
         $fs->dumpFile($adminRepository->getPath().'/users/'.$username.'.yml', $yaml);
         $fs->chmod($adminRepository->getPath().'/users/'.$username.'.yml', 0777);
-        
+
         $message = sprintf('Added user %s.', $username);
-        
+
         $adminRepository->run('add', array('-A'));
         $adminRepository->run('commit', array('-m ' . $message, '--author="Gitdown wiki <wiki@example.com>"'));
-        
+
         $output->writeln(sprintf('Created user %s.', $username));
     }
-    
+
     public function passwordValidator($plainPassword)
     {
         if (empty($plainPassword)) {

@@ -20,14 +20,14 @@ class WikiController extends Controller
     {
         return $this->render('wiki/new.html.twig', array());
     }
-    
+
     /**
      * @Route("/new", name="wiki_create")
      * @Method("POST")
      */
     public function createAction(Request $request)
     {
-        
+
         $name = $request->request->get('name');
         $user = $this->getUser();
 
@@ -35,19 +35,19 @@ class WikiController extends Controller
         if (empty($slug)) {
             $slug = $this->get('slug')->slugify($name);
         }
-        
+
         $repositoryService = $this->get('app.repository');
-        
+
         $repository = $repositoryService->createRepository($slug);
         $adminRepository = $repositoryService->getRepository($this->getParameter('app.admin_repository'));
-        
+
         $path = $repository->getWorkingDir();
-        
+
         $fs = new Filesystem();
         $fs->dumpFile($path . '/index.md', '# ' . $name);
-        
+
         $repository->setDescription($name);
-        
+
         $repository->run('add', array('-A'));
         $repository->run('commit', array('-m Initial commit', '--author="'.$user->getName().' <'.$user->getEmail().'>"'));
 
@@ -72,10 +72,10 @@ class WikiController extends Controller
 
         $adminRepository->run('add', array('-A'));
         $adminRepository->run('commit', array('-m ' . $adminMessage, '--author="'.$user->getName().' <'.$user->getEmail().'>"'));
-        
+
         return $this->redirectToRoute('page_show', array('slug' => $slug));
     }
-    
+
     /**
      * @Route("/edit/{slug}", name="wiki_edit")
      * @Method("GET")
@@ -83,19 +83,19 @@ class WikiController extends Controller
     public function editAction($slug)
     {
         $this->denyAccessUnlessGranted('edit', $slug);
-        
+
         $repository = $this->get('app.repository')->getRepository($slug);
-        
+
         $wiki = array(
             'slug' => $slug,
             'name' => $repository->getDescription()
         );
-        
+
         return $this->render('wiki/edit.html.twig', array(
             'wiki' => $wiki
         ));
     }
-    
+
     /**
      * @Route("/edit/{slug}", name="wiki_update")
      * @Method("POST")
@@ -103,16 +103,16 @@ class WikiController extends Controller
     public function updateAction($slug, Request $request)
     {
         $this->denyAccessUnlessGranted('edit', $slug);
-        
+
         $repository = $this->get('app.repository')->getRepository($slug);
-        
+
         $newName = $request->request->get('name');
-        
+
         $repository->setDescription($newName);
-        
+
         return $this->redirectToRoute('page_show', array('slug' => $slug));
     }
-    
+
     /**
      * @Route("/", name="wiki_index")
      * @Method("GET")
@@ -120,7 +120,7 @@ class WikiController extends Controller
     public function indexAction()
     {
         $wikis = $this->get('app.repository')->getAllRepositories();
-        
+
         return $this->render('wiki/index.html.twig', array(
             'wikis' => $wikis
         ));
