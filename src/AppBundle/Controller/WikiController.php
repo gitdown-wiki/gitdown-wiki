@@ -29,6 +29,7 @@ class WikiController extends Controller
     {
         
         $name = $request->request->get('name');
+        $user = $this->getUser();
 
         $slug = $request->request->get('slug');
         if (empty($slug)) {
@@ -48,9 +49,9 @@ class WikiController extends Controller
         $repository->setDescription($name);
         
         $repository->run('add', array('-A'));
-        $repository->run('commit', array('-m Initial commit', '--author="Gitdown wiki <wiki@example.com>"'));
+        $repository->run('commit', array('-m Initial commit', '--author="'.$user->getName().' <'.$user->getEmail().'>"'));
 
-        $username = $this->getUser()->getUsername();
+        $username = $user->getUsername();
 
         $adminPath = $adminRepository->getWorkingDir();
 
@@ -70,7 +71,7 @@ class WikiController extends Controller
         $adminMessage = sprintf('Added wiki %s', $slug);
 
         $adminRepository->run('add', array('-A'));
-        $adminRepository->run('commit', array('-m ' . $adminMessage, '--author="Gitdown wiki <wiki@example.com>"'));
+        $adminRepository->run('commit', array('-m ' . $adminMessage, '--author="'.$user->getName().' <'.$user->getEmail().'>"'));
         
         return $this->redirectToRoute('page_show', array('slug' => $slug));
     }
