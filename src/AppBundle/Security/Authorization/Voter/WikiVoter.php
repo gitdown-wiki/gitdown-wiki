@@ -136,6 +136,10 @@ class WikiVoter extends Voter
             $hasAccess = true;
         }
 
+        if ($hasAccess === false && !empty($wiki['owners']) && in_array($username, $wiki['owners'])) {
+            $hasAccess = true;
+        }
+
         return $hasAccess;
     }
 }
