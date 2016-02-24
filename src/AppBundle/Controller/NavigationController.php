@@ -25,4 +25,22 @@ class NavigationController extends Controller
             'wikis' => $wikis
         );
     }
+
+    /**
+     * @Template("navigation/pages.html.twig")
+     */
+    public function pagesAction($slug)
+    {
+        $repository = $this->get('app.repository')->getRepository($slug);
+
+        $branch = $repository->getReferences()->getBranch('master');
+        $commit = $branch->getCommit();
+        $pages = $commit->getTree()
+            ->getEntries();
+
+        return array(
+            'pages' => $pages,
+            'slug' => $slug
+        );
+    }
 }

@@ -7,7 +7,7 @@
             
         <nav class="wiki-page__nav">
             <h1>{{ wiki.name }}</h1>
-            {{ menu(tree, wiki.slug) }}
+            {{ render(controller('AppBundle:Navigation:pages', { 'slug': wiki.slug })) }}
         </nav>
         
         <div class="wiki-page__content-container">

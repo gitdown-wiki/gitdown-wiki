@@ -31,12 +31,11 @@ class PageController extends Controller
         
         $branch = $repository->getReferences()->getBranch('master');
         $commit = $branch->getCommit();
-        $tree = $commit->getTree();
-        $blob = $tree->resolvePath($page . '.md');
+        $blob = $commit->getTree()
+            ->resolvePath($page . '.md');
         
         return $this->render('page/edit.html.twig', array(
             'wiki' => $wiki,
-            'tree' => $tree->getEntries(),
             'content' => $blob->getContent(),
             'path' => $page
         ));
