@@ -4,6 +4,9 @@ security:
 wiki:
     resource: "@AppBundle/Controller/WikiController.php"
     type:     annotation
+user:
+    resource: "@AppBundle/Controller/UserController.php"
+    type:     annotation
 page:
     resource: "@AppBundle/Controller/PageController.php"
     type:     annotation
