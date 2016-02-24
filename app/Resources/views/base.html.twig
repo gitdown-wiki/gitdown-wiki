@@ -15,13 +15,7 @@
     <body>
         <nav class="main-nav">
             <h2>Wikis</h2>
-            <ul class="main-nav__menu">
-                {% for wiki in menu.getWikis %}
-                {% if is_granted('show', wiki.slug) %}
-                <li><a class="main-nav__link" href="{{ url('page_show', {'slug': wiki.slug}) }}" tabindes="0">{{ wiki.name }}</a></li>
-                {% endif %}
-                {% endfor %}
-            </ul>
+            {{ render(controller('AppBundle:Navigation:wikis')) }}
             <a href="{{ logout_path(app.security.token.providerKey) }}">Logout</a>
         </nav>
 

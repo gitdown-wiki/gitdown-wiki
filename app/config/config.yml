@@ -35,8 +35,6 @@ framework:
 twig:
     debug:            "%kernel.debug%"
     strict_variables: "%kernel.debug%"
-    globals:
-        menu: '@app.menu'
 
 # Doctrine Configuration
 doctrine:
