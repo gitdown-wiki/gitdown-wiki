@@ -5,10 +5,10 @@
 {% block body %}
     <div id="wrapper">
         <div id="container">
-            <form class="form wiki-form" action="{{ url('page_update', {'slug': wiki.slug, 'page': path}) }}" method="post">
+            <form class="form wiki-form" action="{{ url('page_update', {'slug': wiki.slug, 'path': page.path}) }}" method="post">
                 <fieldset class="form__fieldset wiki-form__editor-container form__fieldset--editor">
-                    <input type="hidden" name="content" id="wiki-content" value="{{ content }}">
-                    <div class="form__input wiki-form__editor" id="wiki-editor">{{ content }}</div>
+                    <input type="hidden" name="content" id="wiki-content" value="{{ page.content }}">
+                    <div class="form__input wiki-form__editor" id="wiki-editor">{{ page.content }}</div>
                 </fieldset>
                 
                 <fieldset class="form__fieldset">

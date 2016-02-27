@@ -19,7 +19,7 @@ class NavigationController extends Controller
      */
     public function wikisAction()
     {
-        $wikis = $this->get('app.repository')->getAllRepositories();
+        $wikis = $this->get('app.wikis')->getAll();
 
         return array(
             'wikis' => $wikis
@@ -31,16 +31,10 @@ class NavigationController extends Controller
      */
     public function pagesAction($slug)
     {
-        $repository = $this->get('app.repository')->getRepository($slug);
-
-        $branch = $repository->getReferences()->getBranch('master');
-        $commit = $branch->getCommit();
-        $pages = $commit->getTree()
-            ->getEntries();
+        $wiki = $this->get('app.wikis')->getWiki($slug);
 
         return array(
-            'pages' => $pages,
-            'slug' => $slug
+            'wiki' => $wiki
         );
     }
 }

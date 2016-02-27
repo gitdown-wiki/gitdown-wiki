@@ -8,96 +8,73 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
 
+use AppBundle\Model\Page;
+
 class PageController extends Controller
 {
     /**
-     * @Route("/{slug}/edit/{page}", name="page_edit", requirements={
-     *     "page": "[\d\w-_\/\.+@*]+"
+     * @Route("/{slug}/edit/{path}", name="page_edit", requirements={
+     *     "path": "[\d\w-_\/\.+@*]*"
      * }, defaults={
-     *     "page": "index"
+     *     "path": ""
      * }))
      * @Method("GET")
      */
-    public function editAction($slug, $page)
+    public function editAction($slug, $path)
     {
         $this->denyAccessUnlessGranted('edit', $slug);
-        
-        $repository = $this->get('app.repository')->getRepository($slug);
-        
-        $wiki = array(
-            'slug' => $slug,
-            'name' => $repository->getDescription()
-        );
-        
-        $branch = $repository->getReferences()->getBranch('master');
-        $commit = $branch->getCommit();
-        $blob = $commit->getTree()
-            ->resolvePath($page . '.md');
+
+        $wiki = $this->get('app.wikis')
+            ->getWiki($slug);
+
+        $page = $wiki->getPage($path);
         
         return $this->render('page/edit.html.twig', array(
             'wiki' => $wiki,
-            'content' => $blob->getContent(),
-            'path' => $page
+            'page' => $page,
+            'path' => $path
         ));
     }
     
     /**
-     * @Route("/{slug}/edit/{page}", name="page_update", requirements={
-     *     "page": "[\d\w-_\/\.+@*]+"
+     * @Route("/{slug}/edit/{path}", name="page_update", requirements={
+     *     "path": "[\d\w-_\/\.+@*]*"
      * }, defaults={
-     *     "page": "index"
+     *     "path": ""
      * }))
      * @Method("POST")
      */
-    public function updateAction($slug, $page, Request $request)
+    public function updateAction($slug, $path, Request $request)
     {
         $this->denyAccessUnlessGranted('edit', $slug);
-        
-        $repository = $this->get('app.repository')->getRepository($slug);
-        
-        $path = $repository->getWorkingDir();
+
+        $page = $this->get('app.wikis')
+            ->getWiki($slug)
+            ->getPage($path);
         
         $content = $request->request->get('content');
-        
         $message = $request->request->get('message');
         
-        if (strlen($message) === 0) {
-            $message = 'Update page ' . $page . '.md';
-        }
-        
-        $fs = new Filesystem();
-        $fs->dumpFile($path . '/' . $page . '.md', $content);
-        
         $user = $this->getUser();
+
+        $page->setContent($content);
+        $page->save($user, $message);
         
-        $name = $user->getName();
-        $name = ($name) ? $name : 'Gitdown wiki';
-        
-        $email = $user->getEmail();
-        $email = ($email) ? $email : 'wiki@example.com';
-        
-        $repository->run('add', array('-A'));
-        $repository->run('commit', array('-m ' . $message, '--author="'.$name.' <'.$email.'>"'));
-        
-        return $this->redirectToRoute('page_show', array('slug' => $slug, 'page' => $page));
+        return $this->redirectToRoute('page_show', array('slug' => $slug, 'path' => $page->getPath()));
     }
     
     /**
      * @Route("/{slug}/new/{path}", name="page_new", requirements={
-     *     "path": "[\d\w-_\/\.+@*]+"
+     *     "path": "[\d\w-_\/\.+@*]*"
      * }))
      * @Method("GET")
      */
     public function newAction($slug, $path = '')
     {
         $this->denyAccessUnlessGranted('edit', $slug);
-        
-        $repository = $this->get('app.repository')->getRepository($slug);
-        
-        $wiki = array(
-            'slug' => $slug,
-            'name' => $repository->getDescription()
-        );
+
+        $wiki = $this->get('app.wikis')
+            ->getWiki($slug);
         
         return $this->render('page/new.html.twig', array(
             'wiki' => $wiki,
@@ -107,116 +84,89 @@ class PageController extends Controller
     
     /**
      * @Route("/{slug}/new/{path}", name="page_create", requirements={
-     *     "path": "[\d\w-_\/\.+@*]+"
+     *     "path": "[\d\w-_\/\.+@*]*"
      * }))
      * @Method("POST")
      */
     public function createAction($slug, $path = '', Request $request)
     {
         $this->denyAccessUnlessGranted('edit', $slug);
-        
-        $repository = $this->get('app.repository')->getRepository($slug);
-        
-        $pageName = $request->request->get('page');
-        
-        $page = $path;
-        $page .= (strlen($page) === 0) ? '' : '/';
-        $page .= $pageName;
-        
-        $repoPath = $repository->getWorkingDir();
-        
-        $fs = new Filesystem();
-        if ($fs->exists($repoPath . '/' . $page . '.md')) {
-            throw new \InvalidArgumentException(sprintf('File %s.md already exists', $page));
-        }
-        
+
+        $name = $request->request->get('page');
         $content = $request->request->get('content');
-        
         $message = $request->request->get('message');
-        
-        if (strlen($message) === 0) {
-            $message = 'Create page ' . $page . '.md';
-        }
-        
-        $fs->dumpFile($repoPath . '/' . $page . '.md', $content);
-        
+
         $user = $this->getUser();
+
+        $wiki = $this->get('app.wikis')
+            ->getWiki($slug);
+
+        $page = new Page($wiki, $name);
+
+        $pagePath = $path;
+        $pagePath .= (strlen($pagePath) === 0) ? '' : '/';
+        $pagePath .= $name;
+
+        if (preg_match('/\.md$/', $name) === 0) {
+            $pagePath .= '/index.md';
+        }
+
+        $page->setPath($pagePath)
+            ->setContent($content);
         
-        $name = $user->getName();
-        $name = ($name) ? $name : 'Gitdown wiki';
+        $page->save($user, $message);
         
-        $email = $user->getEmail();
-        $email = ($email) ? $email : 'wiki@example.com';
-        
-        $repository->run('add', array('-A'));
-        $repository->run('commit', array('-m ' . $message, '--author="'.$name.' <'.$email.'>"'));
-        
-        return $this->redirectToRoute('page_show', array('slug' => $slug, 'page' => $page ));
+        return $this->redirectToRoute('page_show', array('slug' => $slug, 'path' => $path ));
     }
     
     /**
-     * @Route("/{slug}/delete/{page}", name="page_delete", requirements={
-     *     "page": "[\d\w-_\/\.+@*]+"
+     * @Route("/{slug}/delete/{path}", name="page_delete", requirements={
+     *     "path": "[\d\w-_\/\.+@*]*"
      * }, defaults={
-     *     "page": "index"
+     *     "path": ""
      * }))
      * @Method("GET")
      */
-    public function deleteAction($slug, $page)
+    public function deleteAction($slug, $path)
     {
         $this->denyAccessUnlessGranted('delete', $slug);
         
-        if ($page === 'index') {
+        if ($path === '') {
             throw new \InvalidArgumentException('Index.md can not be deleted.');
         }
-        
-        $repository = $this->get('app.repository')->getRepository($slug);
-        
-        $message = 'Delete page ' . $page . '.md';
-        
+
         $user = $this->getUser();
+
+        $page = $this->get('app.wikis')
+            ->getWiki($slug)
+            ->getPage($path);
         
-        $name = $user->getName();
-        $name = ($name) ? $name : 'Gitdown wiki';
-        
-        $email = $user->getEmail();
-        $email = ($email) ? $email : 'wiki@example.com';
-        
-        $repository->run('rm', array($page . '.md'));
-        $repository->run('commit', array('-m ' . $message, '--author="'.$name.' <'.$email.'>"'));
+        $page->delete($user);
         
         return $this->redirectToRoute('page_show', array('slug' => $slug));
     }
     
     /**
-     * @Route("/{slug}/{page}", name="page_show", requirements={
-     *     "page": "[\d\w-_\/\.+@*]+"
+     * @Route("/{slug}/{path}", name="page_show", requirements={
+     *     "path": "[\d\w-_\/\.+@*]*"
      * }, defaults={
-     *     "page": "index"
+     *     "path": ""
      * }))
      * @Method("GET")
      */
-    public function showAction($slug, $page)
+    public function showAction($slug, $path)
     {
         $this->denyAccessUnlessGranted('show', $slug);
-        
-        $repository = $this->get('app.repository')->getRepository($slug);
-        
-        $wiki = array(
-            'slug' => $slug,
-            'name' => $repository->getDescription()
-        );
-        
-        $branch = $repository->getReferences()->getBranch('master');
-        $commit = $branch->getCommit();
-        $tree = $commit->getTree();
-        $blob = $tree->resolvePath($page . '.md');
+
+        $wiki = $this->get('app.wikis')
+            ->getWiki($slug);
+
+        $page = $wiki->getPage($path);
         
         return $this->render('page/show.html.twig', array(
             'wiki' => $wiki,
-            'tree' => $tree->getEntries(),
-            'content' => $blob->getContent(),
-            'path' => $page
+            'page' => $page,
+            'path' => $path
         ));
     }
 }

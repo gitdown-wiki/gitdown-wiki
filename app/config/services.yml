@@ -18,6 +18,9 @@ services:
     app.repository:
         class: AppBundle\Service\RepositoryService
         arguments: ['%app.wiki.root%', '%app.admin_repository%']
+    app.wikis:
+        class: AppBundle\Service\WikiService
+        arguments: ['@=container']
     app.twig_extension:
         class: AppBundle\Twig\AppExtension
         arguments: ['@markdown', '@slug']

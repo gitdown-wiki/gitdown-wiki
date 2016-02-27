@@ -1,3 +1,6 @@
-{% from 'page/partials/menu.html.twig' import menu as menu %}
+{% import 'page/partials/menu.html.twig' as menu %}
 
-{{ menu(pages, slug) }}
+<ul class="wiki-menu">
+    {{ menu.entry(wiki.page) }}
+    <li class="wiki-menu__item"><a href="{{ url('page_new', {'slug': wiki.slug, 'path': ''}) }}" title="New Page" tabindex="0">New page</a></li>
+</ul>
