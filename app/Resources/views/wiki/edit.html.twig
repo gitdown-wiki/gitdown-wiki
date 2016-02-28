@@ -3,7 +3,7 @@
 {% block body %}
     <div id="wrapper">
         <div id="container">
-            <form class="form" action="{{ url('wiki_update', {'slug': wiki.slug}) }}" method="post">
+            <form class="form" action="{{ url('wiki_update', {'wiki': wiki}) }}" method="post">
                 <fieldset class="form__fieldset">
                     <label class="form__label form__label--inline" for="wiki_name">Name:</label>
                     <input class="form__input form__input--inline" type="text" name="name" value="{{ wiki.name }}" placeholder="Name" id="wiki_name">

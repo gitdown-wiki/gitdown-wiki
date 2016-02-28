@@ -21,6 +21,11 @@ services:
     app.wikis:
         class: AppBundle\Service\WikiService
         arguments: ['@=container']
+    app.wiki_converter:
+        class: AppBundle\Request\ParamConverter\WikiConverter
+        arguments: ['@=container']
+        tags:
+          - { name: request.param_converter, priority: -2, converter: wiki_converter }
     app.twig_extension:
         class: AppBundle\Twig\AppExtension
         arguments: ['@markdown', '@slug']

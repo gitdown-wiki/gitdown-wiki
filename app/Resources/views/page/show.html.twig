@@ -16,8 +16,8 @@
             </article>
             
             {% if is_granted('edit', wiki.slug) %}
-            <a class="wiki-page__action-link" href="{{ url('page_edit', {'slug': wiki.slug, 'path': page.path}) }}" tabindex="0" title="Edit Page">Edit Page</a>
-            <a class="wiki-page__action-link" href="{{ url('page_delete', {'slug': wiki.slug, 'path': page.path}) }}" tabindex="0" title="Delete Page">Delete Page</a>
+            <a class="wiki-page__action-link" href="{{ url('page_edit', {'wiki': wiki, 'path': page.path}) }}" tabindex="0" title="Edit Page">Edit Page</a>
+            <a class="wiki-page__action-link" href="{{ url('page_delete', {'wiki': wiki, 'path': page.path}) }}" tabindex="0" title="Delete Page">Delete Page</a>
             {% endif %}
         </div>
     </div>

@@ -55,6 +55,14 @@ class Wiki
             ->getDescription();
     }
 
+    public function setName($name)
+    {
+        $this->getRepository()
+            ->setDescription($name);
+
+        return $this;
+    }
+
     public function getSlug()
     {
         return $this->slug;
@@ -103,5 +111,10 @@ class Wiki
         $this->branchName = $branchName;
 
         return $this;
+    }
+
+    public function __toString()
+    {
+        return $this->getSlug();
     }
 }

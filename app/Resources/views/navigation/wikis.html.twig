@@ -1,7 +1,7 @@
 <ul class="main-nav__menu">
     {% for wiki in wikis %}
         {% if is_granted('show', wiki.slug) %}
-            <li><a class="main-nav__link" href="{{ url('page_show', {'slug': wiki.slug}) }}" tabindes="0">{{ wiki.name }}</a></li>
+            <li><a class="main-nav__link" href="{{ url('page_show', {'wiki': wiki}) }}" tabindes="0">{{ wiki.name }}</a></li>
         {% endif %}
     {% endfor %}
 </ul>

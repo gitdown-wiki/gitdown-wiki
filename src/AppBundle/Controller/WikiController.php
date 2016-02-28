@@ -4,11 +4,12 @@ namespace AppBundle\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Yaml\Dumper;
-use AppBundle\Entity\Wiki;
+use AppBundle\Model\Wiki;
 
 class WikiController extends Controller
 {
@@ -77,19 +78,13 @@ class WikiController extends Controller
     }
 
     /**
-     * @Route("/edit/{slug}", name="wiki_edit")
+     * @Route("/edit/{wiki}", name="wiki_edit")
+     * @ParamConverter("wiki", class="AppBundle\Model\Wiki")
      * @Method("GET")
      */
-    public function editAction($slug)
+    public function editAction(Wiki $wiki)
     {
-        $this->denyAccessUnlessGranted('edit', $slug);
-
-        $repository = $this->get('app.repository')->getRepository($slug);
-
-        $wiki = array(
-            'slug' => $slug,
-            'name' => $repository->getDescription()
-        );
+        $this->denyAccessUnlessGranted('edit', $wiki->getSlug());
 
         return $this->render('wiki/edit.html.twig', array(
             'wiki' => $wiki
@@ -97,20 +92,19 @@ class WikiController extends Controller
     }
 
     /**
-     * @Route("/edit/{slug}", name="wiki_update")
+     * @Route("/edit/{wiki}", name="wiki_update")
+     * @ParamConverter("wiki", class="AppBundle\Model\Wiki")
      * @Method("POST")
      */
-    public function updateAction($slug, Request $request)
+    public function updateAction(Wiki $wiki, Request $request)
     {
-        $this->denyAccessUnlessGranted('edit', $slug);
-
-        $repository = $this->get('app.repository')->getRepository($slug);
+        $this->denyAccessUnlessGranted('edit', $wiki->getSlug());
 
         $newName = $request->request->get('name');
 
-        $repository->setDescription($newName);
+        $wiki->setName($newName);
 
-        return $this->redirectToRoute('page_show', array('slug' => $slug));
+        return $this->redirectToRoute('page_show', array('wiki' => $wiki));
     }
 
     /**
@@ -119,7 +113,7 @@ class WikiController extends Controller
      */
     public function indexAction()
     {
-        $wikis = $this->get('app.repository')->getAllRepositories();
+        $wikis = $this->get('app.wikis')->getAll();
 
         return $this->render('wiki/index.html.twig', array(
             'wikis' => $wikis

@@ -4,28 +4,28 @@ namespace AppBundle\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
 
 use AppBundle\Model\Page;
+use AppBundle\Model\Wiki;
 
 class PageController extends Controller
 {
     /**
-     * @Route("/{slug}/edit/{path}", name="page_edit", requirements={
+     * @Route("/{wiki}/edit/{path}", name="page_edit", requirements={
      *     "path": "[\d\w-_\/\.+@*]*"
      * }, defaults={
      *     "path": ""
      * }))
+     * @ParamConverter("wiki", class="AppBundle\Model\Wiki")
      * @Method("GET")
      */
-    public function editAction($slug, $path)
+    public function editAction(Wiki $wiki, $path)
     {
-        $this->denyAccessUnlessGranted('edit', $slug);
-
-        $wiki = $this->get('app.wikis')
-            ->getWiki($slug);
+        $this->denyAccessUnlessGranted('edit', $wiki->getSlug());
 
         $page = $wiki->getPage($path);
         
@@ -37,20 +37,17 @@ class PageController extends Controller
     }
     
     /**
-     * @Route("/{slug}/edit/{path}", name="page_update", requirements={
+     * @Route("/{wiki}/edit/{path}", name="page_update", requirements={
      *     "path": "[\d\w-_\/\.+@*]*"
      * }, defaults={
      *     "path": ""
      * }))
+     * @ParamConverter("siki", class="AppBundle\Model\Wiki")
      * @Method("POST")
      */
-    public function updateAction($slug, $path, Request $request)
+    public function updateAction(Wiki $wiki, $path, Request $request)
     {
-        $this->denyAccessUnlessGranted('edit', $slug);
-
-        $page = $this->get('app.wikis')
-            ->getWiki($slug)
-            ->getPage($path);
+        $this->denyAccessUnlessGranted('edit', $wiki->getSlug());
         
         $content = $request->request->get('content');
         $message = $request->request->get('message');
@@ -64,17 +61,15 @@ class PageController extends Controller
     }
     
     /**
-     * @Route("/{slug}/new/{path}", name="page_new", requirements={
+     * @Route("/{wiki}/new/{path}", name="page_new", requirements={
      *     "path": "[\d\w-_\/\.+@*]*"
      * }))
+     * @ParamConverter("wiki", class="AppBundle\Model\Wiki")
      * @Method("GET")
      */
-    public function newAction($slug, $path = '')
+    public function newAction(Wiki $wiki, $path = '')
     {
-        $this->denyAccessUnlessGranted('edit', $slug);
-
-        $wiki = $this->get('app.wikis')
-            ->getWiki($slug);
+        $this->denyAccessUnlessGranted('edit', $wiki->getSlug());
         
         return $this->render('page/new.html.twig', array(
             'wiki' => $wiki,
@@ -83,23 +78,21 @@ class PageController extends Controller
     }
     
     /**
-     * @Route("/{slug}/new/{path}", name="page_create", requirements={
+     * @Route("/{wiki}/new/{path}", name="page_create", requirements={
      *     "path": "[\d\w-_\/\.+@*]*"
      * }))
+     * @ParamConverter("wiki", class="AppBundle\Model\Wiki")
      * @Method("POST")
      */
-    public function createAction($slug, $path = '', Request $request)
+    public function createAction(Wiki $wiki, $path = '', Request $request)
     {
-        $this->denyAccessUnlessGranted('edit', $slug);
+        $this->denyAccessUnlessGranted('edit', $wiki->getSlug());
 
         $name = $request->request->get('page');
         $content = $request->request->get('content');
         $message = $request->request->get('message');
 
         $user = $this->getUser();
-
-        $wiki = $this->get('app.wikis')
-            ->getWiki($slug);
 
         $page = new Page($wiki, $name);
 
@@ -120,16 +113,17 @@ class PageController extends Controller
     }
     
     /**
-     * @Route("/{slug}/delete/{path}", name="page_delete", requirements={
+     * @Route("/{wiki}/delete/{path}", name="page_delete", requirements={
      *     "path": "[\d\w-_\/\.+@*]*"
      * }, defaults={
      *     "path": ""
      * }))
+     * @ParamConverter("wiki", class="AppBundle\Model\Wiki")
      * @Method("GET")
      */
-    public function deleteAction($slug, $path)
+    public function deleteAction(Wiki $wiki, $path)
     {
-        $this->denyAccessUnlessGranted('delete', $slug);
+        $this->denyAccessUnlessGranted('delete', $wiki->getSlug());
         
         if ($path === '') {
             throw new \InvalidArgumentException('Index.md can not be deleted.');
@@ -147,19 +141,17 @@ class PageController extends Controller
     }
     
     /**
-     * @Route("/{slug}/{path}", name="page_show", requirements={
+     * @Route("/{wiki}/{path}", name="page_show", requirements={
      *     "path": "[\d\w-_\/\.+@*]*"
      * }, defaults={
      *     "path": ""
      * }))
+     * @ParamConverter("wiki", class="AppBundle\Model\Wiki")
      * @Method("GET")
      */
-    public function showAction($slug, $path)
+    public function showAction(Wiki $wiki, $path)
     {
-        $this->denyAccessUnlessGranted('show', $slug);
-
-        $wiki = $this->get('app.wikis')
-            ->getWiki($slug);
+        $this->denyAccessUnlessGranted('show', $wiki->getSlug());
 
         $page = $wiki->getPage($path);
         
